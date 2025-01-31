@@ -95,3 +95,16 @@ Read this [doc](../../DEVELOPER.MD) for the coding guidelines.
 - [GitHub Issues](https://github.com/100mslive/web-sdks/issues) - Submit any bugs or errors you encounter using the Web SDKs.
 - [Dashboard](https://dashboard.100ms.live/dashboard) - ask questions to get help from the 100ms team.
 - [Contact](https://www.100ms.live/contact) - Reach out to 100ms team to get pricing information, understand how we can help you go live, or to learn more about the platform.
+
+## Deploy Steps
+```sh
+cd packages/roomkit-react
+yarn version --prerelease
+cd ../..
+lerna add @100mslive/roomkit-react --scope=prebuilt-react-integration --exact
+lerna add @100mslive/roomkit-react --scope=@100mslive/roomkit-web --exact
+yarn build
+cd packages/roomkit-react
+yarn pack
+```
+Delete old tgz from git and add new one. Fixup commit. Push.
