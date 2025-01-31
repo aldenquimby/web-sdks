@@ -7,6 +7,11 @@
   resolved "https://registry.yarnpkg.com/@100mslive/hms-noise-cancellation/-/hms-noise-cancellation-0.0.1.tgz#037c8bdfb6b2d7bf12f9d257422150fe6ca43acb"
   integrity sha512-DGnzcXRDJREWypIjGX70er+f2k/XLLRF41lrXPs1+PtB1imdEkECPPS0Fg4BA0BCWKDNAGTZBHZPrBDgUmr9Lw==
 
+"@100mslive/react-icons@0.10.29":
+  version "0.10.29"
+  resolved "https://registry.yarnpkg.com/@100mslive/react-icons/-/react-icons-0.10.29.tgz#244f494eba36378037c5c66192f4c82730b0dfdf"
+  integrity sha512-uWwsPHr50g+kSXSdGXF83JRZVxInpOkEZCOPS6sVD3m3gjHQdC0SR+3QG0P9zKCKPT+b9/nl6EnhEvvNfzUdAQ==
+
 "@100mslive/types-prebuilt@0.12.12":
   version "0.12.12"
   resolved "https://registry.yarnpkg.com/@100mslive/types-prebuilt/-/types-prebuilt-0.12.12.tgz#ead4edeed8e77e42154ac15cb36f32814ddaddd1"
