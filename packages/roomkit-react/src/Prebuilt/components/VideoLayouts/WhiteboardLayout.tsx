@@ -11,6 +11,7 @@ import { ProminenceLayout } from './ProminenceLayout';
 // @ts-ignore: No implicit Any
 import { useSetUiSettings } from '../AppData/useUISettings';
 import { UI_SETTINGS } from '../../common/constants';
+import './whiteboard.css';
 
 const WhiteboardEmbed = () => {
   const isMobile = useMedia(cssConfig.media.md);
