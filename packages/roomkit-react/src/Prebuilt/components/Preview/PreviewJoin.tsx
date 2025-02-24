@@ -1,6 +1,7 @@
 import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { useMeasure, useMedia } from 'react-use';
 import {
+  HMSPeer,
   HMSRoomState,
   selectAppData,
   selectIsLocalVideoEnabled,
@@ -51,6 +52,15 @@ const getParticipantChipContent = (peerCount = 0) => {
   return `${formattedNum} other${parseInt(formattedNum) === 1 ? '' : 's'} in the session`;
 };
 
+const getLocalPeerMetadata = (peer: HMSPeer | undefined) => {
+  try {
+    return peer?.metadata && peer.metadata !== '' ? JSON.parse(peer.metadata) : {};
+  } catch (error) {
+    console.error('cannot parse peer metadata', error);
+    return {};
+  }
+};
+
 const useLocalTileAspectRatio = () => {
   const localPeer = useHMSStore(selectLocalPeer);
   const videoTrack = useHMSStore(selectVideoTrackByID(localPeer?.videoTrack));
@@ -68,10 +78,12 @@ const PreviewJoin = ({
   skipPreview,
   initialName,
   asRole,
+  metadata,
 }: {
   skipPreview?: boolean;
   initialName?: string;
   asRole?: string;
+  metadata?: string;
 }) => {
   const [previewPreference, setPreviewPreference] = useUserPreferences(
     UserPreferencesKeys.PREVIEW,
@@ -87,6 +99,7 @@ const PreviewJoin = ({
   const loadingEffects = useHMSStore(selectAppData(APP_DATA.loadingEffects));
   const { enableJoin, preview, join } = usePreviewJoin({
     name,
+    metadata,
     token: authToken,
     initEndpoint: endpoints?.init,
     initialSettings: {
@@ -190,6 +203,7 @@ const Container = styled('div', {
 
 export const PreviewTile = ({ name, error }: { name: string; error?: boolean }) => {
   const localPeer = useHMSStore(selectLocalPeer);
+  const { avatarImageUrl } = getLocalPeerMetadata(localPeer);
   const { isLocalAudioEnabled, toggleAudio } = useAVToggle();
   const isVideoOn = useHMSStore(selectIsLocalVideoEnabled);
   const mirrorLocalVideo = useUISettings(UI_SETTINGS.mirrorLocalVideo);
@@ -233,7 +247,7 @@ export const PreviewTile = ({ name, error }: { name: string; error?: boolean }) 
 
           {!isVideoOn ? (
             <StyledVideoTile.AvatarContainer>
-              <Avatar name={name} data-testid="preview_avatar_tile" size={avatarSize} />
+              <Avatar imageUrl={avatarImageUrl} name={name} data-testid="preview_avatar_tile" size={avatarSize} />
             </StyledVideoTile.AvatarContainer>
           ) : null}
         </>
