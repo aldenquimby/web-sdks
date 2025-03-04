@@ -1,7 +1,6 @@
 import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { useMeasure, useMedia } from 'react-use';
 import {
-  HMSPeer,
   HMSRoomState,
   selectAppData,
   selectIsLocalVideoEnabled,
@@ -41,7 +40,7 @@ import {
 // @ts-ignore: No implicit Any
 import { defaultPreviewPreference, UserPreferencesKeys, useUserPreferences } from '../hooks/useUserPreferences';
 // @ts-ignore: No implicit Any
-import { calculateAvatarAndAttribBoxSize, getFormattedCount } from '../../common/utils';
+import { calculateAvatarAndAttribBoxSize, getFormattedCount, getMetadata } from '../../common/utils';
 import { APP_DATA, UI_SETTINGS } from '../../common/constants';
 
 const getParticipantChipContent = (peerCount = 0) => {
@@ -50,15 +49,6 @@ const getParticipantChipContent = (peerCount = 0) => {
   }
   const formattedNum = getFormattedCount(peerCount);
   return `${formattedNum} other${parseInt(formattedNum) === 1 ? '' : 's'} in the session`;
-};
-
-const getLocalPeerMetadata = (peer: HMSPeer | undefined) => {
-  try {
-    return peer?.metadata && peer.metadata !== '' ? JSON.parse(peer.metadata) : {};
-  } catch (error) {
-    console.error('cannot parse peer metadata', error);
-    return {};
-  }
 };
 
 const useLocalTileAspectRatio = () => {
@@ -203,7 +193,7 @@ const Container = styled('div', {
 
 export const PreviewTile = ({ name, error }: { name: string; error?: boolean }) => {
   const localPeer = useHMSStore(selectLocalPeer);
-  const { avatarImageUrl } = getLocalPeerMetadata(localPeer);
+  const { avatarImageUrl } = getMetadata(localPeer?.metadata);
   const { isLocalAudioEnabled, toggleAudio } = useAVToggle();
   const isVideoOn = useHMSStore(selectIsLocalVideoEnabled);
   const mirrorLocalVideo = useUISettings(UI_SETTINGS.mirrorLocalVideo);
