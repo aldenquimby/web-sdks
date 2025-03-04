@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useMedia } from 'react-use';
+import { selectAppData, useHMSStore } from '@100mslive/react-sdk';
 import { ChevronLeftIcon, CrossIcon, GridFourIcon, NotificationsIcon, SettingsIcon } from '@100mslive/react-icons';
 import { HorizontalDivider } from '../../../Divider';
 import { IconButton } from '../../../IconButton';
@@ -39,8 +40,14 @@ const SettingsModal = ({ open, onOpenChange, screenType, children = <></> }) => 
   const mediaQueryLg = cssConfig.media.md;
   const isMobile = useMedia(mediaQueryLg);
 
+  // Get custom settings from the store
+  const customSettings = useHMSStore(selectAppData('prebuiltCustomSettings')) || [];
+
+  // Combine default settings with custom settings
+  const allSettingsList = [...settingsList, ...customSettings];
+
   const [showSetting, setShowSetting] = useState(() =>
-    settingsList.reduce((obj, { tabName }) => ({ ...obj, [tabName]: true }), {}),
+    allSettingsList.reduce((obj, { tabName }) => ({ ...obj, [tabName]: true }), {}),
   );
 
   const hideSettingByTabName = useCallback(
@@ -105,6 +112,10 @@ const MobileSettingModal = ({
   resetSelection,
   children = <></>,
 }) => {
+  const customSettings = useHMSStore(selectAppData('prebuiltCustomSettings')) || [];
+
+  // Combine default and custom settings
+  const allSettingsList = [...settingsList, ...customSettings];
   return (
     <Sheet.Root open={open} onOpenChange={onOpenChange}>
       <Sheet.Trigger asChild>{children}</Sheet.Trigger>
@@ -144,7 +155,7 @@ const MobileSettingModal = ({
               overflowY: 'auto',
             }}
           >
-            {settingsList
+            {allSettingsList
               .filter(({ tabName }) => showSetting[tabName])
               .map(({ icon: Icon, tabName, title }) => {
                 return (
@@ -187,7 +198,7 @@ const MobileSettingModal = ({
             direction="column"
             css={{ overflowY: 'scroll', px: '$8', py: '$10', maxHeight: '70vh', overflowX: 'hidden' }}
           >
-            {settingsList
+            {allSettingsList
               .filter(({ tabName }) => showSetting[tabName] && selection === tabName)
               .map(({ content: Content, title, tabName }) => {
                 return <Content key={title} setHide={hideSettingByTabName(tabName)} />;
@@ -208,6 +219,10 @@ const DesktopSettingModal = ({
   resetSelection,
   children = <></>,
 }) => {
+  const customSettings = useHMSStore(selectAppData('prebuiltCustomSettings')) || [];
+
+  // Combine default and custom settings
+  const allSettingsList = [...settingsList, ...customSettings];
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
@@ -239,7 +254,7 @@ const DesktopSettingModal = ({
             >
               <Text variant="h5">Settings </Text>
               <Flex direction="column" css={{ mx: 0, overflowY: 'auto', pt: '$10' }}>
-                {settingsList
+                {allSettingsList
                   .filter(({ tabName }) => showSetting[tabName])
                   .map(({ icon: Icon, tabName, title }) => {
                     return (
@@ -260,7 +275,7 @@ const DesktopSettingModal = ({
                   mr: '$4',
                 }}
               >
-                {settingsList
+                {allSettingsList
                   .filter(({ tabName }) => showSetting[tabName])
                   .map(({ content: Content, title, tabName }) => {
                     return (

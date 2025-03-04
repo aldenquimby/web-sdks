@@ -1,5 +1,5 @@
 import React, { MutableRefObject, useEffect, useRef } from 'react';
-import { Layout, Logo, Screens, Theme, Typography } from '@100mslive/types-prebuilt';
+import { Layout, Logo, Theme, Typography } from '@100mslive/types-prebuilt';
 import { match } from 'ts-pattern';
 import {
   HMSActions,
@@ -36,6 +36,7 @@ import { Box } from '../Layout';
 import { globalStyles, HMSThemeProvider } from '../Theme';
 import { HMSPrebuiltContext } from './AppContext';
 import { AppStateContext, PrebuiltStates, useAppStateManager } from './AppStateContext';
+import { Screens } from './types';
 // @ts-ignore: No implicit Any
 import { FlyingEmoji } from './plugins/FlyingEmoji';
 // @ts-ignore: No implicit Any
@@ -113,13 +114,18 @@ export const HMSPrebuilt = React.forwardRef<HMSPrebuiltRefType, HMSPrebuiltProps
       const hmsStats = hms.getStats();
       hms.triggerOnSubscribe();
 
+      // Add custom settings to app data if provided
+      if (screens?.settings?.customSettings) {
+        hmsActions.setAppData('prebuiltCustomSettings', screens.settings.customSettings);
+      }
+
       reactiveStore.current = {
         hmsActions,
         hmsStats,
         hmsStore,
         hmsNotifications,
       };
-    }, []);
+    }, [screens]);
 
     useEffect(() => {
       if (!ref || !reactiveStore.current) {
