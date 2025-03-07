@@ -105,6 +105,8 @@ lerna add @100mslive/roomkit-react --scope=prebuilt-react-integration --exact
 lerna add @100mslive/roomkit-react --scope=@100mslive/roomkit-web --exact
 yarn build
 cd packages/roomkit-react
+rm -f 100mslive-roomkit-react-*.tgz
 yarn pack
+git add -f 100mslive-roomkit-react-*.tgz
 ```
-Delete old tgz from git and add new one. Fixup commit. Push.
+Fixup prior commit (so tarball is included in tagged version release commit). Push.
